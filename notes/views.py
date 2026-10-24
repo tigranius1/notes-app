@@ -22,3 +22,11 @@ def note_create(request):
 def note_detail(request, pk):
     note = get_object_or_404(Note, pk=pk)
     return render(request, 'notes/detail.html', {'note': note})
+
+
+def note_delete(request, pk):
+    note = get_object_or_404(Note, pk=pk)
+    if request.method == 'POST':
+        note.delete()
+        return redirect('note_list')
+    return render(request, 'notes/delete.html', {'note': note})
