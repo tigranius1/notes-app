@@ -24,6 +24,18 @@ def note_detail(request, pk):
     return render(request, 'notes/detail.html', {'note': note})
 
 
+def note_update(request, pk):
+    note = get_object_or_404(Note, pk=pk)
+    if request.method == 'POST':
+        form = NoteForm(request.POST, instance=note)
+        if form.is_valid():
+            form.save()
+            return redirect('note_detail', pk=note.pk)
+    else:
+        form = NoteForm(instance=note)
+    return render(request, 'notes/update.html', {'form': form, 'note': note})
+
+
 def note_delete(request, pk):
     note = get_object_or_404(Note, pk=pk)
     if request.method == 'POST':
