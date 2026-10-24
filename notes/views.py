@@ -1,11 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models import Q
 from .models import Note
 from .forms import NoteForm
 
 
 def note_list(request):
+    query = request.GET.get('q', '').strip()
     notes = Note.objects.all().order_by('-created_at')
-    return render(request, 'notes/list.html', {'notes': notes})
+    if query:
+        notes = notes.filter(Q(title__icontains=query) | Q(text__icontains=query))
+    return render(request, 'notes/list.html', {'notes': notes, 'query': query})
 
 
 def note_create(request):
